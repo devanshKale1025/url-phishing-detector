@@ -398,143 +398,271 @@
     z-index: 10;
   }
 
-  /* ── PREDICTOR ── */
-  .predictor-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-bottom: 28px;
+  /* ── URL PREDICTOR ── */
+  #url-input-wrap {
+    margin-bottom: 32px;
   }
-  .input-group {
-    display: flex; flex-direction: column; gap: 6px;
+
+  #url-box {
+    display: flex;
+    align-items: center;
+    background: #080d1c;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 6px 6px 6px 18px;
+    gap: 10px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    position: relative;
   }
-  .input-label {
+  #url-box:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(0,229,255,0.08), 0 8px 40px rgba(0,0,0,0.5);
+  }
+  #url-prefix {
+    display: flex; align-items: center; gap: 8px;
     font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 1px; white-space: nowrap;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    padding-right: 14px;
   }
-  .input-field {
-    background: #0d1220;
-    border: 1px solid var(--border);
-    border-radius: 8px;
+  #url-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
     color: var(--text);
     font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    padding: 10px 14px;
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
+    font-size: 14px;
+    padding: 10px 0;
+    min-width: 0;
+    letter-spacing: 0.3px;
   }
-  .input-field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); }
-  .range-wrap { display: flex; align-items: center; gap: 12px; }
-  .input-range {
-    flex: 1;
-    -webkit-appearance: none;
-    background: var(--border);
-    height: 4px;
-    border-radius: 2px;
-    outline: none;
-  }
-  .input-range::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-  }
-  .range-val {
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    color: var(--accent);
-    min-width: 36px;
-    text-align: right;
-  }
+  #url-input::placeholder { color: #2a3550; }
 
-  .predict-btn {
-    background: linear-gradient(135deg, var(--accent), #0080ff);
-    color: var(--bg);
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    border: none;
-    border-radius: 10px;
-    padding: 14px 32px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .predict-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,229,255,0.3); }
-
-  .result-panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
+  #clear-btn {
+    background: none; border: none;
+    color: var(--muted); font-size: 14px;
+    cursor: pointer; padding: 8px 10px;
+    border-radius: 8px; line-height: 1;
+    transition: color 0.15s;
     display: none;
-    animation: fadeUp 0.3s ease;
   }
-  .result-panel.visible { display: block; }
-  .result-verdict {
-    font-size: 42px;
-    font-weight: 800;
-    margin-bottom: 8px;
-  }
-  .result-verdict.phish { color: var(--danger); }
-  .result-verdict.legit { color: var(--safe); }
-  .result-conf { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  #clear-btn:hover { color: var(--danger); }
 
-  /* ── PROBABILITY BAR ── */
-  .prob-bar-wrap {
-    height: 8px;
-    background: var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 6px;
-  }
-  .prob-fill {
-    height: 100%;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--safe), var(--warn), var(--danger));
-    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
-  }
-  .prob-labels {
-    display: flex;
-    justify-content: space-between;
+  #analyze-btn {
+    background: linear-gradient(135deg, var(--accent), #0070cc);
+    color: #050810;
     font-family: 'Space Mono', monospace;
-    font-size: 10px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px;
+    border: none; border-radius: 10px;
+    padding: 12px 24px;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  #analyze-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,229,255,0.3); }
+  #analyze-btn.loading { opacity: 0.7; pointer-events: none; }
+
+  #url-hint {
+    margin-top: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap;
+  }
+  .hint-chip {
+    background: #0d1528;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
     color: var(--muted);
   }
+  .hint-chip:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* ── SIGNAL BARS ── */
-  .signal-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 16px;
+  /* ── VERDICT BANNER ── */
+  #verdict-banner {
+    display: flex; align-items: center; gap: 24px;
+    padding: 28px 32px;
+    border-radius: 16px;
+    border: 1.5px solid var(--border);
+    background: #060b18;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.35s ease;
   }
-  .signal-item {
+  #verdict-banner::before {
+    content: '';
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  #verdict-banner.phish { border-color: rgba(255,51,102,0.5); }
+  #verdict-banner.phish::before { background: radial-gradient(ellipse at 20% 50%, rgba(255,51,102,0.07), transparent 60%); opacity:1; }
+  #verdict-banner.legit { border-color: rgba(0,255,157,0.4); }
+  #verdict-banner.legit::before { background: radial-gradient(ellipse at 20% 50%, rgba(0,255,157,0.06), transparent 60%); opacity:1; }
+
+  #verdict-icon-wrap {
+    flex-shrink: 0;
+  }
+  #verdict-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    border: 2px solid currentColor;
+  }
+  #verdict-icon.phish { background: rgba(255,51,102,0.12); color: var(--danger); border-color: var(--danger); }
+  #verdict-icon.legit { background: rgba(0,255,157,0.10); color: var(--safe);   border-color: var(--safe); }
+
+  #verdict-body { flex: 1; min-width: 0; }
+  #verdict-label {
+    font-size: 38px; font-weight: 800; line-height: 1; margin-bottom: 8px;
+  }
+  #verdict-label.phish { color: var(--danger); }
+  #verdict-label.legit { color: var(--safe); }
+  #verdict-prob-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; color: var(--muted); margin-bottom: 8px;
+  }
+  #verdict-url-display {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: #3a4a70;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 480px;
+  }
+
+  #verdict-gauge-wrap {
+    flex-shrink: 0; text-align: center;
+  }
+  #gauge-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; color: var(--muted);
+    letter-spacing: 2px; margin-top: 4px;
+  }
+
+  /* ── PROB BAR ── */
+  #prob-track {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 28px;
+  }
+  #prob-bar-outer {
+    flex: 1; height: 6px;
+    background: var(--border);
+    border-radius: 3px; overflow: visible;
+    position: relative;
+  }
+  #prob-bar-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, var(--safe) 0%, #ffb800 50%, var(--danger) 100%);
+    transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+  #prob-bar-marker {
+    position: absolute; top: -5px;
+    width: 16px; height: 16px;
+    background: white; border-radius: 50%;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 10px rgba(255,255,255,0.4);
+    transform: translateX(-50%);
+    transition: left 0.9s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ── FEATURE EVIDENCE GRID ── */
+  #feature-evidence-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 2px; margin-bottom: 14px;
+  }
+  #feature-evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .feat-ev-card {
     background: #060b18;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
   }
-  .signal-name {
+  .feat-ev-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .feat-ev-card.bad  { border-color: rgba(255,51,102,0.3); }
+  .feat-ev-card.bad::before  { background: var(--danger); }
+  .feat-ev-card.warn { border-color: rgba(255,184,0,0.3); }
+  .feat-ev-card.warn::before { background: var(--warn); }
+  .feat-ev-card.good { border-color: rgba(0,255,157,0.2); }
+  .feat-ev-card.good::before { background: var(--safe); }
+  .feat-ev-name {
     font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    color: var(--muted);
-    margin-bottom: 6px;
-    letter-spacing: 0.5px;
+    font-size: 9px; color: var(--muted);
+    letter-spacing: 0.5px; margin-bottom: 6px;
+    text-transform: uppercase;
   }
-  .signal-val {
-    font-size: 16px;
-    font-weight: 700;
+  .feat-ev-val {
+    font-size: 20px; font-weight: 800; line-height: 1; margin-bottom: 4px;
   }
-  .signal-val.high { color: var(--danger); }
-  .signal-val.mid  { color: var(--warn); }
-  .signal-val.low  { color: var(--safe); }
+  .feat-ev-card.bad  .feat-ev-val { color: var(--danger); }
+  .feat-ev-card.warn .feat-ev-val { color: var(--warn); }
+  .feat-ev-card.good .feat-ev-val { color: var(--safe); }
+  .feat-ev-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; color: #3a4a70; line-height: 1.5;
+  }
+
+  /* ── DECISION PATH ── */
+  #decision-path-wrap {
+    background: #060b18;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  #decision-path-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    letter-spacing: 2px; margin-bottom: 14px;
+  }
+  #decision-path {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .dp-step {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    line-height: 1.6;
+    animation: fadeUp 0.3s ease both;
+  }
+  .dp-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 5px;
+  }
+  .dp-step.bad  .dp-dot { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
+  .dp-step.warn .dp-dot { background: var(--warn);   box-shadow: 0 0 6px var(--warn); }
+  .dp-step.good .dp-dot { background: var(--safe);   box-shadow: 0 0 6px var(--safe); }
+  .dp-step.info .dp-dot { background: var(--accent);  box-shadow: 0 0 6px var(--accent); }
+  .dp-text { color: var(--text); }
+  .dp-text b { color: var(--accent); }
+
+  #pred-disclaimer {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: #2a3550;
+    line-height: 1.7; padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
 
   /* ── TOOLTIP ── */
   #global-tooltip {
@@ -890,29 +1018,74 @@
 ══════════════════════════════════════════ -->
 <section id="predictor">
   <div class="section-title">Interactive Demo</div>
-  <div class="section-headline">URL Feature<br><em>Predictor</em></div>
-  <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:28px;line-height:1.8">
-    Adjust the 6 most important features identified by the reference Random Forest.<br>
-    The predictor uses a logistic model calibrated on the full dataset (E1 coefficients).
+  <div class="section-headline">Paste Any URL.<br><em>Instant Verdict.</em></div>
+  <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:36px;line-height:1.9">
+    URL features are extracted client-side in real time — no server, no network request.<br>
+    Model uses 20 lexical &amp; structural features derived directly from the URL string.
   </div>
 
-  <div class="two-col">
-    <div>
-      <div class="predictor-grid" id="slider-grid"></div>
-      <button class="predict-btn" onclick="runPredictor()">
-        <span>⚡</span> ANALYZE URL FEATURES
+  <!-- URL INPUT BOX -->
+  <div id="url-input-wrap">
+    <div id="url-box">
+      <div id="url-prefix">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07L11.5 5.5"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07L12.5 18.5"/></svg>
+        URL
+      </div>
+      <input
+        type="text"
+        id="url-input"
+        placeholder="https://example.com/path?query=value"
+        autocomplete="off" autocorrect="off" spellcheck="false"
+        oninput="onURLInput(this.value)"
+        onkeydown="if(event.key==='Enter') analyzeURL()"
+      />
+      <button id="clear-btn" onclick="clearURL()" title="Clear">✕</button>
+      <button id="analyze-btn" onclick="analyzeURL()">
+        <span id="btn-icon">⚡</span>
+        <span id="btn-text">ANALYZE</span>
       </button>
     </div>
-    <div class="result-panel" id="result-panel">
-      <div class="result-verdict" id="result-verdict">—</div>
-      <div class="result-conf" id="result-conf">—</div>
-      <div class="prob-bar-wrap"><div class="prob-fill" id="prob-fill" style="width:50%"></div></div>
-      <div class="prob-labels"><span style="color:var(--safe)">LEGITIMATE</span><span style="color:var(--danger)">PHISHING</span></div>
-      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-top:16px;margin-bottom:8px">SIGNAL BREAKDOWN</div>
-      <div class="signal-grid" id="signal-grid"></div>
-      <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7">
-        ⚠ Demo uses simplified logistic scoring. For production, run full 48-feature E1/E2 model.
+    <div id="url-hint">Try: <span class="hint-chip" onclick="pasteExample('https://paypal-secure-login.account-verify.com/update?user=admin&session=xyz123')">phishing example</span> <span class="hint-chip" onclick="pasteExample('https://www.github.com/features/copilot')">legit example</span> <span class="hint-chip" onclick="pasteExample('http://192.168.1.1/admin/login.php?redirect=http://evil.ru')">IP-based attack</span></div>
+  </div>
+
+  <!-- RESULTS AREA — hidden until analysis runs -->
+  <div id="pred-results" style="display:none">
+
+    <!-- Verdict banner -->
+    <div id="verdict-banner">
+      <div id="verdict-icon-wrap">
+        <div id="verdict-icon"></div>
       </div>
+      <div id="verdict-body">
+        <div id="verdict-label"></div>
+        <div id="verdict-prob-text"></div>
+        <div id="verdict-url-display"></div>
+      </div>
+      <div id="verdict-gauge-wrap">
+        <canvas id="gauge-canvas" width="140" height="140"></canvas>
+        <div id="gauge-label">PHISH SCORE</div>
+      </div>
+    </div>
+
+    <!-- Probability bar -->
+    <div id="prob-track">
+      <span style="color:var(--safe);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px">LEGITIMATE</span>
+      <div id="prob-bar-outer"><div id="prob-bar-fill"></div><div id="prob-bar-marker"></div></div>
+      <span style="color:var(--danger);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px">PHISHING</span>
+    </div>
+
+    <!-- Feature grid -->
+    <div id="feature-evidence-title">EXTRACTED FEATURES &amp; EVIDENCE</div>
+    <div id="feature-evidence-grid"></div>
+
+    <!-- Decision path -->
+    <div id="decision-path-wrap">
+      <div id="decision-path-title">DECISION TRACE — WHY THIS VERDICT?</div>
+      <div id="decision-path"></div>
+    </div>
+
+    <div id="pred-disclaimer">
+      ⚠ Client-side feature extraction covers URL structure only. Page content, form behavior, and RT features require full server-side analysis. This is an educational demonstration of the research model's logic.
     </div>
   </div>
 </section>
@@ -1510,88 +1683,376 @@ function animateBars() {
 animateBars();
 
 // ─────────────────────────────────────────
-// PREDICTOR SLIDERS
+// URL PREDICTOR ENGINE
+// Extracts real URL features client-side and scores with E1 LR coefficients
 // ─────────────────────────────────────────
-const SLIDERS = [
-  { key: 'PctExtNullSelfRedirectHyperlinksRT', label: 'Null Self-Redirect (RT)', min:-1, max:1, step:1, val:1, desc:'Rule-encoded null-redirect ratio' },
-  { key: 'PctExtHyperlinks',    label: 'External Hyperlinks Fraction', min:0, max:1, step:0.01, val:0.1, desc:'Proportion of links to external domains' },
-  { key: 'FrequentDomainNameMismatch', label: 'Domain Name Mismatch', min:0, max:1, step:1, val:0, desc:'Binary: display domain ≠ actual domain' },
-  { key: 'NumDash',             label: 'Number of Hyphens in URL', min:0, max:15, step:1, val:0, desc:'Hyphens used to mimic brands' },
-  { key: 'InsecureForms',       label: 'Insecure Form Action', min:0, max:1, step:1, val:0, desc:'HTTP form on HTTPS page' },
-  { key: 'PctNullSelfRedirectHyperlinks', label: 'Null/Self-Redirect Links', min:0, max:1, step:0.01, val:0.0, desc:'Raw fraction of null redirect links' },
-];
 
-(function buildSliders() {
-  const grid = document.getElementById('slider-grid');
-  SLIDERS.forEach(s => {
-    grid.innerHTML += `
-      <div class="input-group">
-        <label class="input-label">${s.label}</label>
-        <div class="range-wrap">
-          <input type="range" class="input-range" id="sl_${s.key}"
-            min="${s.min}" max="${s.max}" step="${s.step}" value="${s.val}"
-            oninput="document.getElementById('rv_${s.key}').textContent=this.value">
-          <span class="range-val" id="rv_${s.key}">${s.val}</span>
-        </div>
-        <div style="font-family:'Space Mono',monospace;font-size:9px;color:#4a5568;margin-top:2px">${s.desc}</div>
-      </div>`;
-  });
-})();
+// Known brand names for EmbeddedBrandName detection
+const BRANDS = ['paypal','amazon','google','facebook','apple','microsoft','netflix',
+  'instagram','twitter','linkedin','dropbox','ebay','chase','wellsfargo','bankofamerica',
+  'citibank','hsbc','barclays','lloyds','santander','steam','roblox','youtube','tiktok'];
 
-function runPredictor() {
-  // Simplified logistic scoring using E1 coefficients (bias ≈ 0)
-  const vals = {};
-  SLIDERS.forEach(s => { vals[s.key] = parseFloat(document.getElementById('sl_'+s.key).value); });
+// Sensitive words for NumSensitiveWords
+const SENSITIVE = ['login','signin','sign-in','secure','security','update','verify',
+  'verification','account','password','credential','bank','confirm','billing','payment',
+  'invoice','alert','suspended','unlock','recover','restore'];
 
-  // Normalize features (approximate mean/std from dataset)
-  const norm = {
-    'PctExtNullSelfRedirectHyperlinksRT': [0.14, 0.80],
-    'PctExtHyperlinks':                   [0.38, 0.35],
-    'FrequentDomainNameMismatch':          [0.10, 0.30],
-    'NumDash':                             [2.4,  3.2],
-    'InsecureForms':                       [0.18, 0.38],
-    'PctNullSelfRedirectHyperlinks':       [0.20, 0.30],
+// Known TLDs that are legitimacy signals
+const TRUSTED_TLDS = new Set(['com','org','net','edu','gov','io','co','uk','de','fr','jp','au','ca']);
+
+// ── Feature Extractor ──────────────────────
+function extractFeatures(rawUrl) {
+  // Normalise — add scheme if missing so URL() doesn't throw
+  let url = rawUrl.trim();
+  if (!url) return null;
+  if (!/^https?:\/\//i.test(url)) url = 'http://' + url;
+
+  let parsed;
+  try { parsed = new URL(url); } catch(e) { return null; }
+
+  const full       = url;
+  const hostname   = parsed.hostname.toLowerCase();
+  const pathname   = parsed.pathname;
+  const search     = parsed.search;
+  const protocol   = parsed.protocol;       // 'http:' | 'https:'
+  const hostParts  = hostname.split('.');
+
+  // ── URL Length & Structure ──
+  const NumDots            = (full.match(/\./g)  || []).length;
+  const SubdomainLevel     = Math.max(0, hostParts.length - 2);
+  const PathLevel          = pathname.split('/').filter(Boolean).length;
+  const UrlLength          = full.length;
+  const HostnameLength     = hostname.length;
+  const PathLength         = pathname.length;
+  const QueryLength        = search.length;
+
+  // ── Suspicious Characters ──
+  const NumDash            = (full.match(/-/g)   || []).length;
+  const NumDashInHostname  = (hostname.match(/-/g) || []).length;
+  const AtSymbol           = full.includes('@') ? 1 : 0;
+  const TildeSymbol        = full.includes('~') ? 1 : 0;
+  const NumUnderscore      = (full.match(/_/g)   || []).length;
+  const NumPercent         = (full.match(/%/g)   || []).length;
+  const NumQueryComponents = search ? search.slice(1).split('&').filter(Boolean).length : 0;
+  const NumAmpersand       = (search.match(/&/g) || []).length;
+  const NumHash            = (full.match(/#/g)   || []).length;
+  const NumNumericChars    = (full.match(/\d/g)  || []).length;
+  const DoubleSlashInPath  = pathname.includes('//') ? 1 : 0;
+
+  // ── Domain & Identity ──
+  const NoHttps            = protocol === 'http:' ? 1 : 0;
+  const IpAddress          = /^\d{1,3}(\.\d{1,3}){3}$/.test(hostname) ? 1 : 0;
+
+  // Random string: entropy heuristic on the registered domain part
+  const regDomain    = hostParts.slice(-2)[0] || '';
+  const entropy      = shannonEntropy(regDomain);
+  const RandomString = (entropy > 3.6 || /[0-9]{4,}/.test(regDomain)) ? 1 : 0;
+
+  // EmbeddedBrandName: brand found in subdomain or path but NOT as the reg domain
+  const EmbeddedBrandName = BRANDS.some(b =>
+    (SubdomainLevel > 0 && hostname.split('.').slice(0,-2).join('.').includes(b)) ||
+    (pathname.toLowerCase().includes(b) && !regDomain.includes(b))
+  ) ? 1 : 0;
+
+  // DomainInSubdomains / DomainInPaths — brand impersonation signals
+  const subdomainStr = hostParts.slice(0, -2).join('.');
+  const DomainInSubdomains = BRANDS.some(b => subdomainStr.includes(b)) ? 1 : 0;
+  const DomainInPaths      = BRANDS.some(b => pathname.toLowerCase().includes(b)) ? 1 : 0;
+
+  // HttpsInHostname: the word 'https' literally in hostname
+  const HttpsInHostname    = hostname.includes('https') ? 1 : 0;
+
+  // NumSensitiveWords across full URL
+  const fullLower = full.toLowerCase();
+  const NumSensitiveWords  = SENSITIVE.filter(w => fullLower.includes(w)).length;
+
+  // FrequentDomainNameMismatch: heuristic — brand name embedded somewhere but reg domain is different
+  const FrequentDomainNameMismatch = (EmbeddedBrandName && !BRANDS.includes(regDomain)) ? 1 : 0;
+
+  // ── RT (Rule-Based Threshold) encodings ──
+  const SubdomainLevelRT = SubdomainLevel <= 1 ? 1 : SubdomainLevel === 2 ? 0 : -1;
+  const UrlLengthRT      = UrlLength < 54 ? 1 : UrlLength <= 75 ? 0 : -1;
+  // PctExtNullSelfRedirectHyperlinksRT: approximate from URL structure signals
+  // Phishing URLs with many suspicious chars get score -1
+  const suspScore = (AtSymbol + IpAddress + HttpsInHostname + FrequentDomainNameMismatch
+                     + (NumDash > 4 ? 1 : 0) + (NumSensitiveWords > 2 ? 1 : 0));
+  const PctExtNullSelfRedirectHyperlinksRT = suspScore >= 3 ? -1 : suspScore === 0 ? 1 : 0;
+
+  return {
+    // returned as object for display + scoring
+    NumDots, SubdomainLevel, PathLevel, UrlLength, HostnameLength, PathLength, QueryLength,
+    NumDash, NumDashInHostname, AtSymbol, TildeSymbol, NumUnderscore, NumPercent,
+    NumQueryComponents, NumAmpersand, NumHash, NumNumericChars, DoubleSlashInPath,
+    NoHttps, IpAddress, RandomString, EmbeddedBrandName, DomainInSubdomains,
+    DomainInPaths, HttpsInHostname, NumSensitiveWords, FrequentDomainNameMismatch,
+    SubdomainLevelRT, UrlLengthRT, PctExtNullSelfRedirectHyperlinksRT,
+    // meta
+    _hostname: hostname, _protocol: protocol, _regDomain: regDomain,
+    _entropy: entropy.toFixed(2)
   };
+}
 
-  let logit = -0.12; // approximate intercept
-  SLIDERS.forEach(s => {
-    const [mu, sd] = norm[s.key] || [0, 1];
-    const z = (vals[s.key] - mu) / (sd || 1);
-    logit += (LR_COEF[s.key] || 0) * z;
-  });
+function shannonEntropy(str) {
+  if (!str) return 0;
+  const freq = {};
+  for (const c of str) freq[c] = (freq[c] || 0) + 1;
+  return Object.values(freq).reduce((h, f) => {
+    const p = f / str.length;
+    return h - p * Math.log2(p);
+  }, 0);
+}
 
-  const prob = 1 / (1 + Math.exp(-logit));
-  const isPhish = prob > 0.5;
+// ── Logistic Regression Scorer ─────────────
+// Uses E1 full-model coefficients (scaled; approximated normalization)
+const FULL_COEF = {
+  PctExtNullSelfRedirectHyperlinksRT:  -3.407,
+  NumQueryComponents:                  -2.453,
+  FrequentDomainNameMismatch:          +2.071,
+  NoHttps:                             +1.520,
+  IpAddress:                           +1.096,
+  HttpsInHostname:                     +1.340,
+  EmbeddedBrandName:                   +0.920,
+  NumSensitiveWords:                   +0.720,
+  AtSymbol:                            +1.050,
+  NumDashInHostname:                   +0.631,
+  RandomString:                        +0.680,
+  UrlLength:                           +0.440,
+  NumDash:                             -0.350,   // negative in full model (collinear)
+  SubdomainLevel:                      +0.480,
+  NumDots:                             +0.380,
+  DoubleSlashInPath:                   +0.550,
+  DomainInSubdomains:                  +0.800,
+  DomainInPaths:                       +0.620,
+  SubdomainLevelRT:                    -1.100,
+  UrlLengthRT:                         -0.900,
+};
 
-  const panel = document.getElementById('result-panel');
-  const verdict = document.getElementById('result-verdict');
-  const conf = document.getElementById('result-conf');
-  const fill = document.getElementById('prob-fill');
+// Approximate normalization stats (from dataset distribution)
+const NORM = {
+  PctExtNullSelfRedirectHyperlinksRT: [0.14, 0.80],
+  NumQueryComponents:  [1.8,  3.0],
+  FrequentDomainNameMismatch: [0.10, 0.30],
+  NoHttps:             [0.40, 0.49],
+  IpAddress:           [0.05, 0.22],
+  HttpsInHostname:     [0.04, 0.20],
+  EmbeddedBrandName:   [0.12, 0.32],
+  NumSensitiveWords:   [0.9,  1.4],
+  AtSymbol:            [0.02, 0.14],
+  NumDashInHostname:   [0.5,  1.2],
+  RandomString:        [0.25, 0.43],
+  UrlLength:           [74,   46],
+  NumDash:             [2.4,  3.2],
+  SubdomainLevel:      [1.1,  1.0],
+  NumDots:             [3.2,  1.8],
+  DoubleSlashInPath:   [0.05, 0.22],
+  DomainInSubdomains:  [0.08, 0.27],
+  DomainInPaths:       [0.10, 0.30],
+  SubdomainLevelRT:    [0.30, 0.75],
+  UrlLengthRT:         [0.25, 0.72],
+};
 
-  verdict.textContent = isPhish ? '⚠ PHISHING' : '✓ LEGITIMATE';
-  verdict.className = 'result-verdict ' + (isPhish ? 'phish' : 'legit');
-  conf.textContent = `Phishing probability: ${(prob*100).toFixed(1)}% | Confidence: ${(Math.abs(prob-0.5)*200).toFixed(0)}%`;
-  fill.style.width = (prob*100) + '%';
-  panel.classList.add('visible');
+function scoreURL(feats) {
+  let logit = -0.08;
+  for (const [feat, coef] of Object.entries(FULL_COEF)) {
+    if (feats[feat] === undefined) continue;
+    const [mu, sd] = NORM[feat] || [0, 1];
+    const z = (feats[feat] - mu) / (sd || 1);
+    logit += coef * z;
+  }
+  return 1 / (1 + Math.exp(-logit));
+}
 
-  // Signal grid
-  const signals = [
-    { name: 'Domain Mismatch', val: vals['FrequentDomainNameMismatch'], thresh: 0.5, dir: 'high=bad' },
-    { name: 'Insecure Forms',  val: vals['InsecureForms'],              thresh: 0.5, dir: 'high=bad' },
-    { name: 'Null Redirects',  val: vals['PctNullSelfRedirectHyperlinks'], thresh: 0.3, dir: 'high=bad' },
-    { name: 'Ext. Links',      val: vals['PctExtHyperlinks'],            thresh: 0.4, dir: 'high=good' },
-    { name: 'Hyphen Count',    val: vals['NumDash'],                     thresh: 4,   dir: 'high=bad' },
-    { name: 'RT Score',        val: vals['PctExtNullSelfRedirectHyperlinksRT'], thresh: 0, dir: 'high=good' },
+// ── Display Helpers ─────────────────────────
+function onURLInput(val) {
+  document.getElementById('clear-btn').style.display = val ? 'block' : 'none';
+}
+function clearURL() {
+  document.getElementById('url-input').value = '';
+  document.getElementById('clear-btn').style.display = 'none';
+  document.getElementById('pred-results').style.display = 'none';
+  document.getElementById('url-input').focus();
+}
+function pasteExample(url) {
+  document.getElementById('url-input').value = url;
+  onURLInput(url);
+  analyzeURL();
+}
+
+function analyzeURL() {
+  const raw   = document.getElementById('url-input').value.trim();
+  if (!raw) return;
+
+  // Button loading state
+  const btn = document.getElementById('analyze-btn');
+  btn.classList.add('loading');
+  btn.querySelector('#btn-text').textContent = 'SCANNING…';
+
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    btn.querySelector('#btn-text').textContent = 'ANALYZE';
+
+    const feats = extractFeatures(raw);
+    if (!feats) {
+      alert('Could not parse URL. Please check the format.');
+      return;
+    }
+
+    const prob    = scoreURL(feats);
+    const isPhish = prob > 0.5;
+    const conf    = Math.abs(prob - 0.5) * 200;
+
+    // Show results
+    const res = document.getElementById('pred-results');
+    res.style.display = 'block';
+
+    // ── Verdict banner
+    const banner = document.getElementById('verdict-banner');
+    banner.className = isPhish ? 'phish' : 'legit';
+
+    const icon = document.getElementById('verdict-icon');
+    icon.className = isPhish ? 'phish' : 'legit';
+    icon.textContent = isPhish ? '⚠' : '✓';
+
+    document.getElementById('verdict-label').textContent  = isPhish ? '⚠ PHISHING' : '✓ LEGITIMATE';
+    document.getElementById('verdict-label').className    = 'phish legit'.includes(isPhish?'phish':'legit') ? (isPhish ? 'phish' : 'legit') : '';
+    document.getElementById('verdict-label').className = isPhish ? 'phish' : 'legit';
+    document.getElementById('verdict-prob-text').textContent =
+      `Phishing probability: ${(prob*100).toFixed(1)}%  ·  Confidence: ${conf.toFixed(0)}%  ·  Model: E1 Logistic Regression`;
+    document.getElementById('verdict-url-display').textContent = raw.length > 70 ? raw.slice(0,67)+'…' : raw;
+
+    // Gauge
+    drawGauge(prob);
+
+    // Prob bar
+    const pct = (prob * 100).toFixed(1);
+    document.getElementById('prob-bar-fill').style.width = pct + '%';
+    document.getElementById('prob-bar-marker').style.left = pct + '%';
+
+    // Feature evidence cards
+    renderFeatureCards(feats, isPhish);
+
+    // Decision trace
+    renderDecisionTrace(feats, prob, isPhish);
+
+    // Scroll to results
+    res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 380);
+}
+
+function drawGauge(prob) {
+  const canvas = document.getElementById('gauge-canvas');
+  const ctx    = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2 + 10;
+  const r  = 52;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background arc
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, 2*Math.PI);
+  ctx.strokeStyle = '#1a2340';
+  ctx.lineWidth = 10;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // Filled arc — green→red gradient
+  const angle = Math.PI + prob * Math.PI;
+  const grad  = ctx.createLinearGradient(cx-r, cy, cx+r, cy);
+  grad.addColorStop(0,   '#00ff9d');
+  grad.addColorStop(0.5, '#ffb800');
+  grad.addColorStop(1,   '#ff3366');
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI, angle);
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 10;
+  ctx.stroke();
+
+  // Center label
+  ctx.fillStyle = prob > 0.5 ? '#ff3366' : '#00ff9d';
+  ctx.font = 'bold 22px Syne, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${(prob*100).toFixed(0)}%`, cx, cy - 8);
+  ctx.fillStyle = '#4a5568';
+  ctx.font = '9px monospace';
+  ctx.fillText('RISK', cx, cy + 14);
+}
+
+function renderFeatureCards(feats, isPhish) {
+  const grid = document.getElementById('feature-evidence-grid');
+
+  // Feature display spec: [key, label, description, badThreshold, direction]
+  const specs = [
+    ['NoHttps',           'No HTTPS',          'HTTP = no encryption',         0.5, 'high=bad'],
+    ['IpAddress',         'IP as Hostname',     'e.g. http://192.168.1.1/...',  0.5, 'high=bad'],
+    ['AtSymbol',          '@ Symbol',           'Tricks browser into ignoring domain before @', 0.5, 'high=bad'],
+    ['HttpsInHostname',   '"https" in Host',    'e.g. https-paypal.attacker.com', 0.5, 'high=bad'],
+    ['FrequentDomainNameMismatch','Domain Mismatch','Brand in URL ≠ registered domain', 0.5,'high=bad'],
+    ['EmbeddedBrandName', 'Brand Embedded',     'Known brand in path/subdomain', 0.5, 'high=bad'],
+    ['NumSensitiveWords', 'Sensitive Words',    'login, verify, account, secure…', 2, 'high=bad'],
+    ['NumDash',           'Hyphens',            'paypal-secure-login.com',      4, 'high=bad'],
+    ['SubdomainLevel',    'Subdomain Depth',    'Nested subdomains (>2 suspicious)', 2, 'high=bad'],
+    ['UrlLength',         'URL Length',         '≤54 safe · >75 suspicious',    75, 'high=bad'],
+    ['NumQueryComponents','Query Params',       'Number of ?key=value pairs',   4, 'high=bad'],
+    ['DoubleSlashInPath', 'Double Slash //',    'Path injection indicator',     0.5,'high=bad'],
+    ['RandomString',      'Random Domain',      'High entropy = auto-generated',0.5,'high=bad'],
+    ['DomainInSubdomains','Brand in Subdomain', 'paypal.attacker.com',          0.5,'high=bad'],
+    ['SubdomainLevelRT',  'Subdomain RT',       '-1=suspicious 0=ambiguous 1=safe', 0, 'low=bad'],
+    ['UrlLengthRT',       'URL Length RT',      '-1=long 0=medium 1=short',     0, 'low=bad'],
+    ['PctExtNullSelfRedirectHyperlinksRT','Null-Redirect RT','RT encoded null-link fraction', 0, 'low=bad'],
   ];
-  const sg = document.getElementById('signal-grid');
-  sg.innerHTML = signals.map(s => {
-    const isBad = s.dir === 'high=bad' ? s.val > s.thresh : s.val < s.thresh;
-    const cls   = isBad ? 'high' : 'low';
-    return `<div class="signal-item">
-      <div class="signal-name">${s.name}</div>
-      <div class="signal-val ${cls}">${typeof s.val === 'number' && s.val % 1 !== 0 ? s.val.toFixed(2) : s.val}</div>
+
+  grid.innerHTML = specs.map(([key, label, desc, thresh, dir]) => {
+    const val = feats[key];
+    if (val === undefined) return '';
+    const isBad  = dir === 'high=bad' ? val > thresh : val < thresh;
+    const isWarn = !isBad && (dir === 'high=bad' ? val === thresh : val === thresh);
+    const cls    = isBad ? 'bad' : (val !== 0 && val !== 1 && Math.abs(val) <= 1) ? 'warn' : 'good';
+    const disp   = typeof val === 'number' && val % 1 !== 0 ? val.toFixed(2) : val;
+    return `<div class="feat-ev-card ${isBad ? 'bad' : 'good'}">
+      <div class="feat-ev-name">${label}</div>
+      <div class="feat-ev-val">${disp}</div>
+      <div class="feat-ev-desc">${desc}</div>
     </div>`;
   }).join('');
+}
+
+function renderDecisionTrace(feats, prob, isPhish) {
+  const steps = [];
+
+  // Build an ordered list of evidence
+  if (feats.IpAddress) steps.push({ cls:'bad',  text:'<b>IP address</b> used as hostname — bypasses DNS verification entirely.' });
+  if (feats.HttpsInHostname) steps.push({ cls:'bad', text:'Literal <b>"https"</b> found inside the hostname — a deception technique.' });
+  if (feats.AtSymbol) steps.push({ cls:'bad',  text:'<b>@ symbol</b> present — browser ignores everything before it, spoofing the domain.' });
+  if (feats.FrequentDomainNameMismatch) steps.push({ cls:'bad', text:'<b>Domain name mismatch</b> detected — a known brand appears in URL but the registered domain is different.' });
+  if (feats.EmbeddedBrandName) steps.push({ cls:'bad', text:`<b>Known brand</b> embedded in subdomain or path while actual domain is "${feats._regDomain}".` });
+  if (feats.NumSensitiveWords > 2) steps.push({ cls:'bad', text:`<b>${feats.NumSensitiveWords} sensitive words</b> found (login, verify, secure…) — high-pressure vocabulary.` });
+  if (feats.NoHttps) steps.push({ cls:'warn', text:'<b>HTTP</b> scheme — no TLS encryption. Not definitive alone but adds risk.' });
+  if (feats.SubdomainLevel > 2) steps.push({ cls:'bad', text:`<b>Subdomain depth ${feats.SubdomainLevel}</b> — legitimate sites rarely exceed 2 levels.` });
+  if (feats.UrlLength > 100) steps.push({ cls:'warn', text:`<b>URL length ${feats.UrlLength}</b> — excessively long URLs obscure the real domain in browser bars.` });
+  if (feats.NumDash > 4) steps.push({ cls:'warn', text:`<b>${feats.NumDash} hyphens</b> — high hyphen count suggests brand-mimicry (e.g., paypal-secure-login.com).` });
+  if (feats.RandomString) steps.push({ cls:'warn', text:`<b>Domain entropy ${feats._entropy}</b> — hostname appears auto-generated or random.` });
+  if (feats.DoubleSlashInPath) steps.push({ cls:'warn', text:'<b>Double slash</b> in path — potential authority injection.' });
+  if (feats.DomainInSubdomains) steps.push({ cls:'bad', text:'Known brand name found <b>in subdomain</b> — classic brand impersonation pattern.' });
+
+  // Positive signals
+  if (!feats.NoHttps) steps.push({ cls:'good', text:'<b>HTTPS</b> present — encrypted connection (necessary but not sufficient for safety).' });
+  if (feats.SubdomainLevel <= 1) steps.push({ cls:'good', text:`<b>Subdomain depth ${feats.SubdomainLevel}</b> — within normal range for legitimate sites.` });
+  if (!feats.IpAddress && !feats.RandomString) steps.push({ cls:'good', text:'Hostname appears to be a <b>genuine domain name</b>, not an IP or random string.' });
+  if (feats.NumSensitiveWords === 0) steps.push({ cls:'good', text:'<b>No sensitive vocabulary</b> (login, verify, account) found in URL.' });
+
+  // Final verdict step
+  steps.push({ cls: isPhish ? 'bad' : 'good', text:
+    `<b>Final score: ${(prob*100).toFixed(1)}%</b> phishing probability → verdict: <b>${isPhish ? 'PHISHING' : 'LEGITIMATE'}</b> (threshold 50%).`
+  });
+
+  const container = document.getElementById('decision-path');
+  container.innerHTML = steps.map((s, i) => `
+    <div class="dp-step ${s.cls}" style="animation-delay:${i*0.06}s">
+      <div class="dp-dot"></div>
+      <div class="dp-text">${s.text}</div>
+    </div>`).join('');
 }
 
 // ─────────────────────────────────────────
